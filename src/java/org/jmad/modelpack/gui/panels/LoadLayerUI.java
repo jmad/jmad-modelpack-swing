@@ -11,7 +11,7 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 
 public class LoadLayerUI extends LayerUI<JComponent> {
-    public static final String REPAINT_EVENT = "LoadLayerUI_repaint";
+    private static final String REPAINT_EVENT = "LoadLayerUI_repaint";
     private boolean loading;
 
     @Override
