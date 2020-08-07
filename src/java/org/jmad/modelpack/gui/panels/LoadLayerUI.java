@@ -11,6 +11,7 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 
 public class LoadLayerUI extends LayerUI<JComponent> {
+    public static final String REPAINT_EVENT = "LoadLayerUI_repaint";
     private boolean loading;
 
     @Override
@@ -34,7 +35,7 @@ public class LoadLayerUI extends LayerUI<JComponent> {
 
     @Override
     public void applyPropertyChange(PropertyChangeEvent evt, JLayer<? extends JComponent> l) {
-        if (evt.getPropertyName().equals("repaint")) {
+        if (evt.getPropertyName().equals(REPAINT_EVENT)) {
             l.repaint();
         }
     }
@@ -65,6 +66,6 @@ public class LoadLayerUI extends LayerUI<JComponent> {
 
     public void setLoading(boolean loading) {
         this.loading = loading;
-        invokeOnSwingThread(() -> firePropertyChange("repaint", null, null));
+        invokeOnSwingThread(() -> firePropertyChange(REPAINT_EVENT, null, null));
     }
 }
