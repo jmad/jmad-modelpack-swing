@@ -1,0 +1,13 @@
+.settings
+.classpath
+.project
+.gradle
+.idea
+bin
+out
+build
+cbng*
+fort*
+*.data
+*.log
+
