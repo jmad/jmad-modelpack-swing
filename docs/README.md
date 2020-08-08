@@ -4,12 +4,9 @@
 [![codecov](https://codecov.io/gh/jmad/jmad-modelpack-swing/branch/master/graph/badge.svg)](https://codecov.io/gh/jmad/jmad-modelpack-swing)
 [![Codacy code quality](https://api.codacy.com/project/badge/Grade/b830f8eafc0441199d126967bd87d08c)](https://www.codacy.com/app/jmad/jmad-modelpack-swing?utm_source=github.com&utm_medium=referral&utm_content=jmad/jmad-modelpack-swing&utm_campaign=Badge_Grade)
 
-# JMad Modelpackage Service
+# Graphical User interface on top of the JMad Modelpackage Service
 
-This service allows to connect to different model repositories, to fetch model definitions from them. Currently, the following sources are supported:
-
-* INTERNAL: This is equivalent to the original concepts, where jmad model definitions are read from the classpath.
-* Gitlab Groups: Treats gitlab groups as model package repositories, from which model packages can be fetched.
+This Swing GUI component provides an all-in-one dialog to select model packages from connected repositories and model definitions contained in these packages, to be used later within jmad (or applications using jmad).
 
 ## Build Artifacts of the Latest Version
  
