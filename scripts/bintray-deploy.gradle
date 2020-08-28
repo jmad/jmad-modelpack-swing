@@ -1,5 +1,5 @@
 project.ext.getDeploymentVersion = {
-    if(VCS_TAG == null) {
+    if (VCS_TAG == null) {
         throw new RuntimeException("VCS_TAG is not set. Cannot detect deployment version")
     }
     String tmpDeploymentVersion = VCS_TAG.replaceFirst("v", "");
@@ -57,7 +57,7 @@ def pomExtraInfo = {
 }
 
 
-task sourceJar(type: Jar) {
+task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
     archiveClassifier = "sources"
 }
@@ -72,6 +72,8 @@ task javadocJar(type: Jar) {
 publishing {
     publications {
         CustomMavenPublication(MavenPublication) {
+            from components.java
+
             groupId POM.groupId
             artifactId POM.artifactId
             version getDeploymentVersion()
@@ -83,8 +85,6 @@ publishing {
                 asNode().appendNode('description', POM.description)
                 asNode().children().last() + pomExtraInfo
             }
-
-            from components.java
         }
     }
 }
