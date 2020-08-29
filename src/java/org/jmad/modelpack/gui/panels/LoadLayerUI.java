@@ -15,28 +15,27 @@ public class LoadLayerUI extends LayerUI<JComponent> {
     private boolean loading;
 
     @Override
-    public void paint(Graphics g, JComponent c) {
-        super.paint(g, c);
+    public void paint(Graphics graphics, JComponent component) {
+        super.paint(graphics, component);
         if (loading) {
-            Graphics2D overlay = (Graphics2D) g.create();
+            Graphics2D overlay = (Graphics2D) graphics;
             Composite oldComposite = overlay.getComposite();
             overlay.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-            overlay.setColor(Color.WHITE);
-            overlay.fillRect(0, 0, c.getWidth(), c.getHeight());
-            overlay.setComposite(oldComposite);
             overlay.setColor(Color.BLACK);
+            overlay.fillRect(0, 0, component.getWidth(), component.getHeight());
+            overlay.setComposite(oldComposite);
+            overlay.setColor(Color.WHITE);
             String text = "Loading, please wait ...";
             Rectangle2D stringBounds = overlay.getFontMetrics().getStringBounds(text, overlay);
-            overlay.drawString(text, (int) ((c.getWidth() - stringBounds.getWidth()) / 2),
-                    (int) ((c.getHeight() - stringBounds.getHeight()) / 2));
-            overlay.dispose();
+            overlay.drawString(text, (int) ((component.getWidth() - stringBounds.getWidth()) / 2),
+                    (int) ((component.getHeight() - stringBounds.getHeight()) / 2));
         }
     }
 
     @Override
-    public void applyPropertyChange(PropertyChangeEvent evt, JLayer<? extends JComponent> l) {
+    public void applyPropertyChange(PropertyChangeEvent evt, JLayer<? extends JComponent> layer) {
         if (evt.getPropertyName().equals(REPAINT_EVENT)) {
-            l.repaint();
+            layer.repaint();
         }
     }
 
@@ -56,11 +55,13 @@ public class LoadLayerUI extends LayerUI<JComponent> {
 
     @Override
     public void installUI(JComponent c) {
+        super.installUI(c);
         ((JLayer) c).setLayerEventMask(AWTEvent.KEY_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK);
     }
 
     @Override
     public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
         ((JLayer) c).setLayerEventMask(0);
     }
 

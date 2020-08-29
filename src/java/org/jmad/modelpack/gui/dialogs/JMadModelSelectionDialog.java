@@ -4,6 +4,10 @@
 
 package org.jmad.modelpack.gui.dialogs;
 
+import static javax.swing.BorderFactory.createEmptyBorder;
+import static javax.swing.Box.createHorizontalGlue;
+import static javax.swing.Box.createHorizontalStrut;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Optional;
@@ -32,6 +36,7 @@ public class JMadModelSelectionDialog extends JDialog {
         add(tabPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(createEmptyBorder(5, 5, 5, 5));
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         JButton okButton = new JButton("OK");
         okButton.addActionListener(e -> {
@@ -43,8 +48,10 @@ public class JMadModelSelectionDialog extends JDialog {
             modelSelection = null;
             setVisible(false);
         });
-        buttonPanel.add(Box.createHorizontalGlue());
+        buttonPanel.add(createHorizontalGlue());
+        buttonPanel.add(createHorizontalStrut(5));
         buttonPanel.add(cancelButton);
+        buttonPanel.add(createHorizontalStrut(5));
         buttonPanel.add(okButton);
         add(buttonPanel, BorderLayout.SOUTH);
 

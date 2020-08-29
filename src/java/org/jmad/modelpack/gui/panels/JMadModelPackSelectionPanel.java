@@ -3,6 +3,7 @@ package org.jmad.modelpack.gui.panels;
 import static com.google.common.collect.Multimaps.synchronizedMultimap;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
+import static javax.swing.Box.createVerticalStrut;
 import static org.jmad.modelpack.gui.util.MoreSwingUtilities.invokeOnSwingThread;
 
 import javax.swing.*;
@@ -47,9 +48,11 @@ class JMadModelPackSelectionPanel extends JPanel {
         JButton reloadButton = new JButton("Refresh");
         reloadButton.addActionListener(e -> reloadAvailableModelPacks());
         leftPanel.add(reloadButton);
+        leftPanel.add(createVerticalStrut(5));
         JButton clearCacheButton = new JButton("Clear Cache");
-        clearCacheButton.addActionListener(e -> service.clearCache());
+        clearCacheButton.addActionListener(e -> service.clearCache().block());
         leftPanel.add(clearCacheButton);
+        leftPanel.add(createVerticalStrut(5));
         add(leftPanel, BorderLayout.WEST);
 
         JXTreeTable treeTable = new JXTreeTable(modelPackTableModel);
