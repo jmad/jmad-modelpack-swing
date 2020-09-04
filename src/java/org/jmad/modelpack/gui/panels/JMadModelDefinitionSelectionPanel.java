@@ -5,6 +5,7 @@ import static org.jmad.modelpack.gui.util.MoreSwingUtilities.invokeOnSwingThread
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Optional;
 
 import cern.accsoft.steering.jmad.domain.machine.RangeDefinition;
 import cern.accsoft.steering.jmad.domain.machine.SequenceDefinition;
@@ -72,9 +73,9 @@ class JMadModelDefinitionSelectionPanel extends JPanel {
     private void modelDefinitionSelectionChanged() {
         JMadModelDefinition modelDef = modelDefinitionSelector.getSelectedValue();
         if (modelDef == null) {
-            sequenceDefinitionSelector.setModel(new DefaultComboBoxModel<>());
-            rangeDefinitionSelector.setModel(new DefaultComboBoxModel<>());
-            opticsDefinitionSelector.setModel(new DefaultListModel<>());
+            Optional.ofNullable(sequenceDefinitionSelector).ifPresent(s -> s.setModel(new DefaultComboBoxModel<>()));
+            Optional.ofNullable(rangeDefinitionSelector).ifPresent(s -> s.setModel(new DefaultComboBoxModel<>()));
+            Optional.ofNullable(opticsDefinitionSelector).ifPresent(s -> s.setModel(new DefaultListModel<>()));
             return;
         }
         if (sequenceDefinitionSelector != null) {
