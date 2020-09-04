@@ -1,0 +1,5 @@
+org.jmad.modelpack.gui.conf
+org.jmad.modelpack.gui.dialogs
+org.jmad.modelpack.gui.domain
+org.jmad.modelpack.gui.panels
+org.jmad.modelpack.gui.util
