@@ -117,13 +117,17 @@ class JMadModelDefinitionSelectionPanel extends JPanel {
     }
 
     public JMadModelSelection getModelSelection() {
+        JMadModelDefinition selectedModel = modelDefinitionSelector.getSelectedValue();
+        if (selectedModel == null) {
+            return null;
+        }
         if (rangeDefinitionSelector != null && opticsDefinitionSelector != null) {
             JMadModelStartupConfiguration startupConfiguration = new JMadModelStartupConfiguration();
             startupConfiguration.setInitialRangeDefinition((RangeDefinition) rangeDefinitionSelector.getSelectedItem());
             startupConfiguration.setInitialOpticsDefinition(opticsDefinitionSelector.getSelectedValue());
-            return new JMadModelSelection(modelDefinitionSelector.getSelectedValue(), startupConfiguration);
+            return new JMadModelSelection(selectedModel, startupConfiguration);
         } else {
-            return new JMadModelSelection(modelDefinitionSelector.getSelectedValue());
+            return new JMadModelSelection(selectedModel);
         }
     }
 }

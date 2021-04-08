@@ -41,7 +41,11 @@ public class JMadModelSelectionDialog extends JDialog {
         JButton okButton = new JButton("OK");
         okButton.addActionListener(e -> {
             modelSelection = modelSelectionPanel.getModelSelection();
-            setVisible(false);
+            if (modelSelection == null) {
+                JOptionPane.showMessageDialog(this, "Please select a model!");
+            } else {
+                setVisible(false);
+            }
         });
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> {
