@@ -1,43 +1,20 @@
 buildscript {
-    project.ext.CERN_VM = System.getProperty('CERN_TECHNET_VM') ?: System.getenv('CERN_TECHNET_VM') ?: false
-    project.ext.DEPLOYMENT = System.getProperty('deployment') ?: false
-    project.ext.VCS_TAG = System.getProperty('TRAVIS_TAG') ?: System.getenv('TRAVIS_TAG')
-    project.ext.POM = [
-            groupId    : 'io.jmad',
-            artifactId : 'jmad-modelpack-swing',
-            description: 'Swing GUI components for accessing the JMad model package service.'
-    ]
-    project.ext.INFO = [
-            repo            : 'https://github.com/jmad/jmad-modelpack-fx.git',
-            url             : 'https://jmad.github.io/',
-            github          : 'https://github.com/jmad/jmad-modelpack-fx',
-            githubIssues    : 'https://github.com/jmad/jmad-modelpack-fx/issues',
-            licenseNameShort: 'Apache-2.0',
-            licenseName     : 'The Apache License, Version 2.0',
-            licenseUrl      : 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    ]
-    project.ext.BINTRAY = [
-            repo        : 'jmad-repo',
-            name        : 'jmad-modelpack-swing',
-            organization: 'jmad',
-            userName    : System.getProperty('BINTRAY_USER') ?: System.getenv('BINTRAY_USER'),
-            apiToken    : System.getProperty('BINTRAY_API_TOKEN') ?: System.getenv('BINTRAY_API_TOKEN')
-    ]
+    project.ext['CERN_VM'] = System.getProperty('CERN_TECHNET_VM') ?: System.getenv('CERN_TECHNET_VM') ?: project.hasProperty('CERN_TECHNET_VM') ?: false
+    project.ext['DEPLOYMENT'] = System.getProperty('DEPLOYMENT') ?: false
 
     repositories {
-        if (CERN_VM) {
-            maven { url 'http://artifactory.cern.ch/gradle-plugins' }
+        if (project['CERN_VM']) {
             maven { url 'http://artifactory.cern.ch/ds-jcenter' }
             maven { url 'http://artifactory.cern.ch/development' }
+            maven { url 'http://artifactory.cern.ch/gradle-plugins' }
         } else {
-            mavenCentral()
-            maven { url 'https://repo.spring.io/plugins-release' }
-            maven { url 'https://plugins.gradle.org/m2/' }
+            gradlePluginPortal()
         }
     }
+
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.jk1:gradle-license-report:1.5'
+        classpath 'io.github.gradle-nexus:publish-plugin:1.0.0'
     }
 }
 
@@ -45,17 +22,10 @@ apply plugin: 'java'
 apply plugin: 'jacoco'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
 
-group = 'jmad'
+group = project['POM.groupId']
 
 sourceCompatibility = JavaVersion.VERSION_1_8
-
-if (DEPLOYMENT) {
-    println 'Applying deployment scripts'
-    apply from: './scripts/bintray-deploy.gradle'
-}
 
 repositories {
     if (CERN_VM) {
@@ -63,12 +33,12 @@ repositories {
         maven { url 'http://artifactory.cern.ch/development' }
     } else {
         mavenCentral()
-        jcenter()
     }
 }
 
 dependencies {
-    compile group: 'io.jmad', name: 'jmad-modelpack-service', version: '0.9.1'
+    compile group: 'io.jmad', name: 'jmad-modelpack-service', version: '0.9.2'
+
     compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
 
     compile group: 'org.springframework', name: 'spring-core', version: '5.2.0.RELEASE'
@@ -89,7 +59,7 @@ dependencies {
 
 wrapper {
     gradleVersion = '5.4.1'
-    distributionUrl = distributionUrl.replace("bin", "all")
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 sourceSets {
@@ -104,6 +74,13 @@ sourceSets {
     }
 }
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
 jacocoTestReport {
     reports {
         xml.enabled true
@@ -115,6 +92,19 @@ jacocoTestReport {
 
 javadoc { options.encoding = "UTF-8" }
 
+if (!project.tasks.findByName("javadocJar")) {
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+}
+
+if (!project.tasks.findByName("sourcesJar")) {
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+}
 
 eclipse {
     classpath {
@@ -138,4 +128,9 @@ if (!project['CERN_VM']) {
         renderers = [this.class.classLoader.loadClass('com.github.jk1.license.render.InventoryHtmlReportRenderer').newInstance()]
         filters = [this.class.classLoader.loadClass('com.github.jk1.license.filter.LicenseBundleNormalizer').newInstance()]
     }
+}
+
+if (project['DEPLOYMENT']) {
+    println 'Applying deployment scripts'
+    apply from: 'https://raw.githubusercontent.com/ossgang/gradle-scripts/master/deployment/deploy-to-maven-central.gradle'
 }
