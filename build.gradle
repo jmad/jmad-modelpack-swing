@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'io.jmad', name: 'jmad-modelpack-service', version: '0.10.0'
+    compile group: 'io.jmad', name: 'jmad-modelpack-service', version: '0.10.1'
 
     compile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
 
